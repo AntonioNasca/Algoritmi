@@ -1,0 +1,71 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#define inf INT_MAX/2
+
+using namespace std;
+
+ifstream fin("input.txt");
+ofstream fout("output.txt");
+
+void sort(int* a, int n){
+    for (int i=0; i<n-1; i++) {
+        for (int j=i+1; j<n; j++) {
+            if(a[i]>a[j]){
+                int t=a[i];
+                a[i]=a[j];
+                a[j]=t;
+            }
+        }
+    }
+}
+
+void resto(int* m, int n, int r){
+    int min[r+1],indici[r+1];
+    min[0]=0;
+    indici[0]=-1;
+    
+    for (int i=1; i<r+1; i++) {
+        min[i]=inf;
+        indici[i]=-1;
+        for (int j=0; j<n; j++) {
+            if(m[j]<=i){
+                if(min[i-m[j]]+1 <= min[i]){
+                    min[i]=min[i-m[j]]+1;
+                    indici[i]=j;
+                }
+            }
+        }
+    }
+    
+    fout<<min[r]<<" ";
+    //
+    int resto[min[r]];
+    int zz=0;
+    for (int i=r; i>0; i-=m[indici[i]]){
+        resto[zz]=m[indici[i]];
+        zz++;
+    }
+    for (int i=zz-1; i>=0; i--)
+        fout<<resto[i]<<" ";
+    
+    fout<<endl;
+    
+}
+
+int main(){
+    int R, *M, N;
+    for (int count=0; count<100; count++) {
+        fin>>R>>N;
+        M=new int[N];
+        
+        for (int i=0; i<N; i++) fin>>M[i];
+        sort(M,N);
+        //for (int i=0; i<N; i++) cout<<M[i]<<" ";
+        //cout<<endl;
+        resto(M,N,R);
+    }
+    return 0;
+}
+
+
